@@ -3,7 +3,7 @@ class Account():
     def __init__(self):
         pass
         
-    def create_account(self, full_name, CNIC, phone_no, PIN, init_bal):
+    def create_account(self, full_name, CNIC, phone_no, PIN, init_bal, acc_no):
         detail = {
             "Full Name" : full_name,
             "CNIC" : CNIC,
@@ -11,7 +11,7 @@ class Account():
             "PIN" : PIN,
             "Initial Balance" : init_bal
         }
-        acc_no = 1
+
         acc = {
             "Account No" : acc_no,
             "Details" : detail
@@ -28,7 +28,7 @@ class Account():
         with open("User.json", "w") as f:
             json.dump(history, f, indent=4)
 
-        acc_no += 1
+acc_no = 1001
 
 while True:
     print("=" * 20)
@@ -37,7 +37,6 @@ while True:
     choice = input("\n1. Create Account\n2. Login\n3. Exit\nChoose option : ")
 
     if  choice == "1" :
-
         c1 = Account()
         full_name = input("Enter full name :")
         while True:
@@ -69,13 +68,20 @@ while True:
 
         while True:
             init_bal = input("Enter init_bal :")
-            init_bal = int(init_bal)
-            if init_bal >= 0 :
-                break
-
-            else:
+            try:
+                init_bal = int(init_bal)
+                if init_bal >= 0 :
+                    break
+                else:
+                    print("Invalid balance.\nPlease enter again.")
+            except ValueError:
                 print("Invalid balance.\nPlease enter again.")
 
-        c1.create_account(full_name, CNIC, phone_no, PIN, init_bal)
+            
+            
+            
+        
+        c1.create_account(full_name, CNIC, phone_no, PIN, init_bal, acc_no)
+        acc_no += 1
 
     
