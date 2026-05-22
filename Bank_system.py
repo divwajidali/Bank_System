@@ -34,16 +34,48 @@ while True:
     print("=" * 20)
     print("   BANK MANAGEMENT   ")
     print("=" * 20)
-    choice = input("1. Create Account\n2. Login\n3. Exit\nChoose option :")
+    choice = input("\n1. Create Account\n2. Login\n3. Exit\nChoose option : ")
 
     if  choice == "1" :
 
         c1 = Account()
         full_name = input("Enter full name :")
-        CNIC = input("Enter CNIC :")
+        while True:
+            CNIC = input("Enter CNIC :")
+            try:
+                with open("User.json", "r") as f:
+                    data = json.load(f)
+
+            except FileNotFoundError:
+                data = []
+
+            duplicate = False
+
+            for acc in data:
+
+                if acc["Details"]["CNIC"] == CNIC :
+                    print("CNIC is already exist.")
+                    duplicate = True
+
+            if not duplicate:
+                break                  
         phone_no = input("Enter phone no :")
-        PIN = input("Enter PIN :")
-        init_bal = input("Enter init_bal :")
+        while True:
+            PIN = input("Enter PIN :")
+            if PIN.isnumeric() and len(PIN) == 4 :
+                break
+            else:
+                print("Invalid PIN.\nPlease enter again.")
+
+        while True:
+            init_bal = input("Enter init_bal :")
+            init_bal = int(init_bal)
+            if init_bal >= 0 :
+                break
+
+            else:
+                print("Invalid balance.\nPlease enter again.")
+
         c1.create_account(full_name, CNIC, phone_no, PIN, init_bal)
 
     
