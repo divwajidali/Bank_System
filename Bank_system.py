@@ -1,5 +1,5 @@
 import json
-class Account():
+class Bank():
     def __init__(self):
         pass
         
@@ -28,6 +28,24 @@ class Account():
         with open("User.json", "w") as f:
             json.dump(history, f, indent=4)
 
+    def login(self, acc_no, PIN):
+        try:
+            with open("User.json" , "r") as f:
+                data = json.load(f)
+
+        except FileNotFoundError:
+            data = []
+            print("Account not found.")
+        found = False
+        for acc in data:
+            if acc["Account No"] == acc_no and acc["Details"]["PIN"] == PIN :
+                print("Login Successfully.")
+                print("Dashboard.")
+                found = True
+        if not found:
+            print("Invalid PIN.\nPlease enter again.")
+        
+
 acc_no = 1001
 
 while True:
@@ -37,7 +55,7 @@ while True:
     choice = input("\n1. Create Account\n2. Login\n3. Exit\nChoose option : ")
 
     if  choice == "1" :
-        c1 = Account()
+        acc1 = Bank()
         full_name = input("Enter full name :")
         while True:
             CNIC = input("Enter CNIC :")
@@ -81,7 +99,27 @@ while True:
             
             
         
-        c1.create_account(full_name, CNIC, phone_no, PIN, init_bal, acc_no)
+        acc1.create_account(full_name, CNIC, phone_no, PIN, init_bal, acc_no)
         acc_no += 1
 
+
+    elif choice == "2" :
+        acc1 = Bank()
+        acc_no = input("Enter Account no :")
+        try:
+            acc_no = int(acc_no)
+            
+
+        except ValueError:
+            continue
+            
+        PIN = input("Enter PIN :")
+        acc1.login(acc_no, PIN)
+
+    elif choice == "3" :
+        print("Exit!")
+        break
+
+    else:
+        print("Invalid choice.\nPlease enter again.")
     
