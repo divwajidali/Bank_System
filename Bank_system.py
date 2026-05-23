@@ -93,6 +93,15 @@ class Bank():
 
                     elif choice == "4" :
                         acc1.transaction_history(acc)
+
+                    elif choice == "5":
+                        while True:
+                            new_pin = input("Enter PIN :")
+                            if new_pin.isnumeric() and len(new_pin) == 4 :
+                                break
+                            else:
+                                print("Invalid PIN.\nPlease enter again.")
+                        acc1.change_pin(acc,data,new_pin)
                  
 
         if not found:
@@ -158,7 +167,12 @@ class Dashboard():
 
         print("="*85)
 
-    
+    def change_pin(self, acc, data, new_pin):
+        acc["Details"]["PIN"] = new_pin
+        with open("User.json", "w") as f:
+            json.dump(data, f, indent=4)
+        print("Your PIN is changed successfully.")
+
 acc_no = 1001
 while True:
     print("=" * 20)
