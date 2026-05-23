@@ -1,6 +1,7 @@
 import json
 from datetime import date
 from datetime import datetime
+import re
 class Bank():
     def __init__(self):
         pass
@@ -204,24 +205,41 @@ while True:
         full_name = input("Enter full name :")
         while True:
             CNIC = input("Enter CNIC :")
-            try:
-                with open("User.json", "r") as f:
-                    data = json.load(f)
 
-            except FileNotFoundError:
-                data = []
+            pattern = r"^\d{5}-\d{7}-\d{1}$"
 
-            duplicate = False
+            if re.match(pattern, CNIC):
+                try:
+                    with open("User.json", "r") as f:
+                        data = json.load(f)
 
-            for acc in data:
+                except FileNotFoundError:
+                    data = []
 
-                if acc["Details"]["CNIC"] == CNIC :
-                    print("CNIC is already exist.")
-                    duplicate = True
+                duplicate = False
 
-            if not duplicate:
-                break                  
-        phone_no = input("Enter phone no :")
+                for acc in data:
+
+                    if acc["Details"]["CNIC"] == CNIC :
+                        print("CNIC is already exist.")
+                        duplicate = True
+
+                if not duplicate:
+                    break          
+
+            else:
+                print("Invalid CNIC")
+                    
+        while True:
+            phone_no = input("Enter Phone No : ")
+
+            pattern = r"^(\+92|0)3\d{9}$"
+
+            if re.match(pattern, phone_no):
+                break
+            else:
+                print("Invalid Number")
+
         while True:
             PIN = input("Enter PIN :")
             if PIN.isnumeric() and len(PIN) == 4 :
