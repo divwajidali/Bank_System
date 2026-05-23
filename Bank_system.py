@@ -37,7 +37,7 @@ class Bank():
 
         except FileNotFoundError:
             data = []
-        print("Account not found.")
+            print("Account not found.")
         found = False
         for acc in data:
             if acc["Account No"] == acc_no and acc["Details"]["PIN"] == PIN :
@@ -105,6 +105,7 @@ class Bank():
 
                     elif choice == "6":
                         print("Logout Successfully.")
+                        break
 
                     else:
                         print("Invalid choice.\nPlease enter again.")
