@@ -1,4 +1,6 @@
 import json
+from datetime import date
+from datetime import datetime
 class Bank():
     def __init__(self):
         pass
@@ -45,7 +47,7 @@ class Bank():
                     print("=" * 20)
                     print("     DASHBOARD     ")
                     print("=" * 20)
-                    choice = input("\n1. Check Balance\n2. Deposit Money\n3. Withdraw Money\n4. Transfer Money\n5. Transaction\n6. Change PIN\n7. Logout\nEnter choice :")
+                    choice = input("\n1. Check Balance\n2. Deposit Money\n3. Withdraw Money\n4. Transaction\n5. Change PIN\n6. Logout\nEnter choice :")
                     acc1 = Dashboard()
                     if choice == "1":
                         acc1.show_balance(acc)
@@ -61,8 +63,14 @@ class Bank():
                                     print("Invalid Amount.")
                             except ValueError:
                                 print("Invalid Amount.")
+                        
+                        try:
+                            history = acc["Details"]["Transaction"]
 
-                        acc1.deposit(acc, amount, data)
+                        except:
+                            history = []
+
+                        acc1.deposit(acc, amount, data, history)
                 
                     elif choice == "3":
                         while True:
@@ -75,10 +83,18 @@ class Bank():
                                     print("Invalid Amount.")
                             except ValueError:
                                 print("Invalid Amount.")
+                        
+                        try:
+                            history = acc["Details"]["Transaction"]
 
-                        acc1.withdraw(acc, amount, data)
+                        except:
+                            history = []
+                        acc1.withdraw(acc, amount, data, history)
+
+                    elif choice == "4" :
+                        acc1.transaction_history(acc)
                  
-            
+
         if not found:
             print("Invalid PIN.\nPlease enter again.")
             
@@ -89,24 +105,60 @@ class Dashboard():
     def show_balance(self, acc):
         print(f"Balance : {acc["Details"]["Balance"]}")
                 
-    def deposit(self, acc, amount, data):
+    def deposit(self, acc, amount, data , history):
         balance = acc["Details"]["Balance"]
         balance += amount
         acc["Details"]["Balance"] = balance
+        time = datetime.now().time()
+
+        time = time.strftime("%H:%M:%S")
+        today_date = date.today()
+        today_date = today_date.strftime("%d-%m-%Y")
+        transaction = {
+            "Time" : time,
+            "Date" : today_date,
+            "Type" : "Deposit",
+            "Amount" : amount
+        }
+        history.append(transaction)
+        acc["Details"].update({"Transaction" : history})
         with open("User.json", "w") as f:
             json.dump(data, f, indent=4)
         print(f"RS. {amount} was deposited successfully.")
         print(f"Your current balance is {balance}.")
 
-    def withdraw(self, acc, amount, data):
+    def withdraw(self, acc, amount, data, history):
         balance = acc["Details"]["Balance"]
         balance -= amount
         acc["Details"]["Balance"] = balance
+        time = datetime.now().time()
+
+        time = time.strftime("%H:%M:%S")
+        today_date = date.today()
+        today_date = today_date.strftime("%d-%m-%Y")
+        transaction = {
+            "Time" : time,
+            "Date" : today_date,
+            "Type" : "Withdraw",
+            "Amount" : amount
+        }
+        history.append(transaction)
+        acc["Details"].update({"Transaction" : history})
         with open("User.json", "w") as f:
             json.dump(data, f, indent=4)
         print(f"RS. {amount} withdraw successfully.")
         print(f"Your current balance is {balance}.")
 
+    def transaction_history(self, acc):
+        print("="*85)
+        print(f"{'Date':<20}{'|':<5}{'Time':<20}{'|':<5}{'Type':<15}{'|':<5}{'Amount':<15}")
+        print("="*85)
+        for history in acc["Details"]["Transaction"] :
+            print(f"{history['Date']:<20}{'|':<5}{history['Time']:<20}{'|':<5}{history['Type']:<15}{'|':<5}{history['Amount']:<15}")
+
+        print("="*85)
+
+    
 acc_no = 1001
 while True:
     print("=" * 20)
@@ -160,6 +212,8 @@ while True:
             
         
         acc1.create_account(full_name, CNIC, phone_no, PIN, init_bal, acc_no)
+        print("*****| Account created successfully. |*****")
+        print(f"Your account number is {acc_no}.")
         acc_no += 1
 
 
