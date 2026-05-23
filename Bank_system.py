@@ -119,7 +119,7 @@ class Dashboard():
         pass
 
     def show_balance(self, acc):
-        print(f"Balance : {acc["Details"]["Balance"]}")
+        print(f"Balance : RS. {acc["Details"]["Balance"]}")
                 
     def deposit(self, acc, amount, data , history):
         balance = acc["Details"]["Balance"]
@@ -145,25 +145,29 @@ class Dashboard():
 
     def withdraw(self, acc, amount, data, history):
         balance = acc["Details"]["Balance"]
-        balance -= amount
-        acc["Details"]["Balance"] = balance
-        time = datetime.now().time()
+        if balance >= amount :
+            balance -= amount
+            acc["Details"]["Balance"] = balance
+            time = datetime.now().time()
 
-        time = time.strftime("%H:%M:%S")
-        today_date = date.today()
-        today_date = today_date.strftime("%d-%m-%Y")
-        transaction = {
-            "Time" : time,
-            "Date" : today_date,
-            "Type" : "Withdraw",
-            "Amount" : amount
-        }
-        history.append(transaction)
-        acc["Details"].update({"Transaction" : history})
-        with open("User.json", "w") as f:
-            json.dump(data, f, indent=4)
-        print(f"RS. {amount} withdraw successfully.")
-        print(f"Your current balance is {balance}.")
+            time = time.strftime("%H:%M:%S")
+            today_date = date.today()
+            today_date = today_date.strftime("%d-%m-%Y")
+            transaction = {
+                "Time" : time,
+                "Date" : today_date,
+                "Type" : "Withdraw",
+                "Amount" : amount
+            }
+            history.append(transaction)
+            acc["Details"].update({"Transaction" : history})
+            with open("User.json", "w") as f:
+                json.dump(data, f, indent=4)
+            print(f"RS. {amount} withdraw successfully.")
+            print(f"Your current balance is {balance}.")
+
+        else:
+            print("Invalid choice.\nPlease enter again.")
 
     def transaction_history(self, acc):
         print("="*85)
