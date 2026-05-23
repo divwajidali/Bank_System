@@ -102,6 +102,13 @@ class Bank():
                             else:
                                 print("Invalid PIN.\nPlease enter again.")
                         acc1.change_pin(acc,data,new_pin)
+
+                    elif choice == "6":
+                        print("Logout Successfully.")
+
+                    else:
+                        print("Invalid choice.\nPlease enter again.")
+
                  
 
         if not found:
