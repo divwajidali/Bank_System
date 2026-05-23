@@ -87,7 +87,7 @@ class Bank():
                         try:
                             history = acc["Details"]["Transaction"]
 
-                        except:
+                        except ValueError:
                             history = []
                         acc1.withdraw(acc, amount, data, history)
 
@@ -168,7 +168,7 @@ class Dashboard():
             print(f"Your current balance is {balance}.")
 
         else:
-            print("Invalid choice.\nPlease enter again.")
+            print("Insufficient Balance.")
 
     def transaction_history(self, acc):
         print("="*85)
@@ -185,7 +185,14 @@ class Dashboard():
             json.dump(data, f, indent=4)
         print("Your PIN is changed successfully.")
 
-acc_no = 1001
+try:
+    with open("User.json", "r") as f:
+        data = json.load(f)
+        highest_no = max(acc["Account No"] for acc in data)
+        acc_no = highest_no + 1
+except FileNotFoundError:
+    acc_no = 1001
+
 while True:
     print("=" * 20)
     print("   BANK MANAGEMENT   ")
