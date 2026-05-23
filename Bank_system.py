@@ -42,7 +42,10 @@ class Bank():
                 found = True
                 print("Login Successfully.")
                 while True:
-                    choice = input("1. Check Balance\n2. Deposit Money\n3. Withdraw Money\n4. Transfer Money\n5. Transaction\n6. Change PIN\n7. Logout\nEnter choice :")
+                    print("=" * 20)
+                    print("     DASHBOARD     ")
+                    print("=" * 20)
+                    choice = input("\n1. Check Balance\n2. Deposit Money\n3. Withdraw Money\n4. Transfer Money\n5. Transaction\n6. Change PIN\n7. Logout\nEnter choice :")
                     acc1 = Dashboard()
                     if choice == "1":
                         acc1.show_balance(acc)
@@ -61,7 +64,20 @@ class Bank():
 
                         acc1.deposit(acc, amount, data)
                 
-                
+                    elif choice == "3":
+                        while True:
+                            amount = input("Enter Amount :")
+                            try:
+                                amount = int(amount)
+                                if amount > 0:
+                                    break
+                                else:
+                                    print("Invalid Amount.")
+                            except ValueError:
+                                print("Invalid Amount.")
+
+                        acc1.withdraw(acc, amount, data)
+                 
             
         if not found:
             print("Invalid PIN.\nPlease enter again.")
@@ -80,6 +96,15 @@ class Dashboard():
         with open("User.json", "w") as f:
             json.dump(data, f, indent=4)
         print(f"RS. {amount} was deposited successfully.")
+        print(f"Your current balance is {balance}.")
+
+    def withdraw(self, acc, amount, data):
+        balance = acc["Details"]["Balance"]
+        balance -= amount
+        acc["Details"]["Balance"] = balance
+        with open("User.json", "w") as f:
+            json.dump(data, f, indent=4)
+        print(f"RS. {amount} withdraw successfully.")
         print(f"Your current balance is {balance}.")
 
 acc_no = 1001
