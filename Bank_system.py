@@ -9,7 +9,7 @@ class Bank():
             "CNIC" : CNIC,
             "Phone No" : phone_no,
             "PIN" : PIN,
-            "Initial Balance" : init_bal
+            "Balance" : init_bal
         }
 
         acc = {
@@ -35,19 +35,54 @@ class Bank():
 
         except FileNotFoundError:
             data = []
-            print("Account not found.")
+        print("Account not found.")
         found = False
         for acc in data:
             if acc["Account No"] == acc_no and acc["Details"]["PIN"] == PIN :
-                print("Login Successfully.")
-                print("Dashboard.")
                 found = True
+                print("Login Successfully.")
+                while True:
+                    choice = input("1. Check Balance\n2. Deposit Money\n3. Withdraw Money\n4. Transfer Money\n5. Transaction\n6. Change PIN\n7. Logout\nEnter choice :")
+                    acc1 = Dashboard()
+                    if choice == "1":
+                        acc1.show_balance(acc)
+
+                    elif choice == "2":
+                        while True:
+                            amount = input("Enter Amount :")
+                            try:
+                                amount = int(amount)
+                                if amount > 0:
+                                    break
+                                else:
+                                    print("Invalid Amount.")
+                            except ValueError:
+                                print("Invalid Amount.")
+
+                        acc1.deposit(acc, amount, data)
+                
+                
+            
         if not found:
             print("Invalid PIN.\nPlease enter again.")
-        
+            
+class Dashboard():
+    def __init__(self):
+        pass
+
+    def show_balance(self, acc):
+        print(f"Balance : {acc["Details"]["Balance"]}")
+                
+    def deposit(self, acc, amount, data):
+        balance = acc["Details"]["Balance"]
+        balance += amount
+        acc["Details"]["Balance"] = balance
+        with open("User.json", "w") as f:
+            json.dump(data, f, indent=4)
+        print(f"RS. {amount} was deposited successfully.")
+        print(f"Your current balance is {balance}.")
 
 acc_no = 1001
-
 while True:
     print("=" * 20)
     print("   BANK MANAGEMENT   ")
